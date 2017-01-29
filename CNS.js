@@ -96,7 +96,6 @@ class CNS {
     }
 
     findPureSymbol() {
-        //todo: optimize this for known variables from the model
         for (let i in this.symbols) {
             let currentSymbol = this.symbols[i];
             if (currentSymbol.value != undefined)
