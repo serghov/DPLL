@@ -20,8 +20,6 @@ class CNS {
         for (let i in strClauses) {
             this.clauses.push(new clause(strClauses[i], this.symbols));
         }
-
-        console.log(JSON.stringify(this));
     }
 
     static DPLL(cns, model = {}) {
