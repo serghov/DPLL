@@ -20,13 +20,15 @@ class clause {
 
     get value() {
         for (let i in this.literals) {
-
-            if (this.literals[i].value == undefined)
-                return undefined;
-
             if (this.literals[i].value == true)
                 return true;
         }
+
+        for (let i in this.literals) {
+            if (this.literals[i].value == undefined)
+                return undefined;
+        }
+
         return false;
     }
 

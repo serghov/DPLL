@@ -22,8 +22,10 @@ class CNS {
         }
     }
 
-    static DPLL(cns, model = {}) {
+    static DPLL(cns) {
         let allTrue = true;
+
+        console.log(cns.clauses.map((clause) => clause.value));
 
         for (let i in cns.clauses) {
             if (cns.clauses[i].value == undefined) {
@@ -38,14 +40,14 @@ class CNS {
 
         //not sure why i need the model in this case
         //probably remove this
-        let pureSymbolObj = cns.findPureSymbol(model);
+        let pureSymbolObj = cns.findPureSymbol();
         if (pureSymbolObj) {
             if (pureSymbolObj.sign == literal.signs.positive)
                 pureSymbolObj.symbol.value = true;
             else
                 pureSymbolObj.symbol.value = false;
 
-            return CNS.DPLL(cns, model);
+            return CNS.DPLL(cns);
         }
 
         let unitClause;
@@ -64,7 +66,7 @@ class CNS {
             else
                 pureSymbolObj.symbol.value = false;
 
-            return DPLL(cns, model);
+            return DPLL(cns);
         }
 
         let firstNonAsignedSymbol;
@@ -93,7 +95,7 @@ class CNS {
 
     }
 
-    findPureSymbol(model = {}) {
+    findPureSymbol() {
         //todo: optimize this for known variables from the model
         for (let i in this.symbols) {
             let currentSymbol = this.symbols[i];
@@ -101,13 +103,17 @@ class CNS {
                 continue;
             let sign = undefined;
             let next = false;
-
+            let occurances = 0;
             for (let j in this.clauses) {
+                if (this.clauses[j].value == true)
+                    continue;
                 let literals = this.clauses[j].literals;
 
                 for (let k in literals) {
                     if (literals[k].symbol != currentSymbol)
                         continue;
+                    else
+                        occurances++
                     if (sign == undefined)
                         sign = literals[k].sign;
                     else if (sign != literals[k].sign) {
@@ -118,7 +124,7 @@ class CNS {
                 if (next)
                     break;
             }
-            if (!next)
+            if (!next && occurances > 0)
                 return {symbol: currentSymbol, sign: sign};
         }
         return undefined;
